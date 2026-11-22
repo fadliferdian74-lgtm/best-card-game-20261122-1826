@@ -1,0 +1,102 @@
+/* Ember Sigils — the table. Dark green felt, wooden trim, gold accents, parchment
+   cards. Suits are told apart by colour AND shape (▲ ◆ ✚ ★). */
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #0d1f14; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+#game { position: fixed; inset: 0; }
+#status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.table { display: flex; flex-direction: column; height: 100%; background: radial-gradient(ellipse at 50% 30%, #276b45 0%, #1d4d33 55%, #143626 100%); border: 10px solid #5b3a1e; outline: 3px solid #e9c46a; color: #f4ead5; padding: 6px 14px; }
+
+.topbar { display: flex; align-items: center; gap: 14px; padding: 2px 4px 8px; border-bottom: 2px solid rgba(233, 196, 106, .45); }
+.game-title { font-family: Georgia, serif; font-size: 26px; letter-spacing: 4px; color: #ffd97a; text-shadow: 0 2px 0 #3d2712; }
+.score-line { font-size: 17px; font-weight: 700; color: #f4ead5; }
+.icon-btn { margin-left: auto; width: 34px; height: 34px; border-radius: 50%; border: 2px solid #e9c46a; background: #143626; color: #ffd97a; font-size: 18px; font-weight: 700; cursor: pointer; }
+.icon-btn + .icon-btn { margin-left: 0; }
+
+.zone { display: flex; align-items: center; gap: 14px; padding: 8px 0; min-height: 0; }
+.foe-zone { flex: 1 1 0; }
+.you-zone { flex: 1 1 0; }
+.midbar { display: flex; align-items: center; gap: 16px; padding: 4px 4px; }
+.log-line { flex: 1; font-style: italic; color: #ffe9b0; font-size: 15px; min-height: 20px; }
+
+.hero { display: flex; gap: 10px; align-items: center; background: rgba(0, 0, 0, .35); border: 2px solid rgba(233, 196, 106, .5); border-radius: 12px; padding: 8px 12px; min-width: 300px; }
+.hero.active-turn { border-color: #ffd97a; box-shadow: 0 0 14px rgba(255, 217, 122, .55); }
+.hero-portrait { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-size: 28px; font-weight: 700; color: #fff; flex: none; }
+.hero.you .hero-portrait { background: #1971c2; border: 3px solid #a5d8ff; }
+.hero.foe .hero-portrait { background: #c92a2a; border: 3px solid #ffc9c9; }
+.hero-info { flex: 1; min-width: 0; }
+.hero-name { font-family: Georgia, serif; font-size: 16px; font-weight: 700; }
+.hero-life { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.life-label, .ember-label { font-size: 11px; letter-spacing: 1px; color: #d3c9a8; }
+.life-bar { flex: 1; height: 12px; background: #0d1f14; border: 1px solid #e9c46a; border-radius: 6px; overflow: hidden; }
+.life-fill { height: 100%; background: linear-gradient(90deg, #51cf66, #94d82d); transition: width .4s ease; }
+.life-number { font-weight: 700; font-size: 14px; }
+.hero-ember { display: flex; align-items: center; gap: 3px; margin-top: 4px; }
+.ember-pip { color: #3d4a3f; font-size: 13px; }
+.ember-pip.lit { color: #fab005; text-shadow: 0 0 6px #fab005; }
+
+.hand { display: flex; gap: 8px; align-items: center; }
+.foe-hand { margin-left: auto; }
+.you-hand { margin-left: auto; }
+.table-row { display: flex; gap: 8px; align-items: center; flex: 1; justify-content: center; min-width: 0; }
+.table-empty { color: rgba(244, 234, 213, .55); font-style: italic; font-size: 14px; }
+
+/* ---- Cards ---- */
+.card { position: relative; width: 118px; height: 168px; flex: none; background: linear-gradient(160deg, #fdf6e3, #f4ead5 60%, #e8d9b5); color: #241f1a; border-radius: 10px; border: 3px solid #8d6b3d; box-shadow: 0 4px 10px rgba(0, 0, 0, .5); padding: 6px 7px; font-family: Georgia, serif; transition: transform .18s ease, box-shadow .18s ease; user-select: none; }
+.card .card-cost { position: absolute; top: -7px; left: -7px; width: 30px; height: 30px; border-radius: 50%; background: #1971c2; color: #fff; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; font-family: system-ui, sans-serif; }
+.card .card-sigil { position: absolute; top: 4px; right: 6px; font-size: 20px; }
+.card .card-name { font-size: 14px; font-weight: 700; text-align: center; margin-top: 24px; min-height: 18px; }
+.card .card-art { font-size: 44px; text-align: center; line-height: 1.15; }
+.card .card-keyword { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-align: center; color: #70460f; min-height: 12px; }
+.card .card-text { font-size: 11px; font-style: italic; text-align: center; color: #4a4238; line-height: 1.25; min-height: 26px; }
+.card .card-stats { position: absolute; left: 0; right: 0; bottom: -8px; display: flex; justify-content: space-between; padding: 0 4px; }
+.card .card-attack, .card .card-health { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; color: #fff; border: 2px solid #fff; font-family: system-ui, sans-serif; }
+.card .card-attack { background: #c92a2a; }
+.card .card-health { background: #2b8a3e; }
+.card .card-spell { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #70460f; }
+.card.sigil-ember { border-color: #e8590c; } .card.sigil-ember .card-sigil, .card.sigil-ember .card-art { color: #e8590c; }
+.card.sigil-frost { border-color: #339af0; } .card.sigil-frost .card-sigil, .card.sigil-frost .card-art { color: #1971c2; }
+.card.sigil-thorn { border-color: #51cf66; } .card.sigil-thorn .card-sigil, .card.sigil-thorn .card-art { color: #2b8a3e; }
+.card.sigil-gale { border-color: #fab005; } .card.sigil-gale .card-sigil, .card.sigil-gale .card-art { color: #e67700; }
+
+.card.playable { cursor: pointer; box-shadow: 0 0 0 2px #ffd97a, 0 6px 14px rgba(0, 0, 0, .55); }
+.card.playable:hover { transform: translateY(-12px) scale(1.04); }
+.card.selected { transform: translateY(-14px); box-shadow: 0 0 0 3px #ffd97a, 0 0 18px rgba(255, 217, 122, .8); }
+.card.can-attack { cursor: pointer; box-shadow: 0 0 0 2px #94d82d, 0 6px 14px rgba(0, 0, 0, .55); }
+.card.can-attack:hover { transform: translateY(-6px); }
+.card.targetable { cursor: crosshair; box-shadow: 0 0 0 2px #fa5252, 0 0 16px rgba(250, 82, 82, .7); }
+.card.frozen { filter: saturate(.4) brightness(1.15); }
+.card.frozen::after { content: "❄ FROZEN"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #1971c2; background: rgba(165, 216, 255, .35); border-radius: 8px; }
+.card.warded::before { content: "◈"; position: absolute; top: 30px; right: 6px; color: #1971c2; font-size: 18px; }
+.card-back { background: linear-gradient(160deg, #862e9c, #5f3dc4); border-color: #e9c46a; width: 74px; height: 106px; }
+.card-back .card-back-glyph { font-size: 40px; color: #e9c46a; text-align: center; line-height: 96px; }
+.foe-hand .card-back { width: 56px; height: 80px; }
+.foe-hand .card-back .card-back-glyph { font-size: 28px; line-height: 70px; }
+
+.end-turn-btn { background: linear-gradient(180deg, #fab005, #e67700); color: #241f1a; border: 2px solid #ffd97a; border-radius: 10px; padding: 10px 22px; font-size: 16px; font-weight: 800; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 0 #7a4a00; }
+.end-turn-btn.your-turn { animation: pulse 1.2s ease-in-out infinite; }
+.end-turn-btn:disabled { opacity: .45; cursor: default; animation: none; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 4px 0 #7a4a00, 0 0 0 0 rgba(255, 217, 122, .6); } 50% { box-shadow: 0 4px 0 #7a4a00, 0 0 0 10px rgba(255, 217, 122, 0); } }
+
+/* ---- Overlays ---- */
+.overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(10, 25, 15, .82); z-index: 10; }
+.overlay.hidden { display: none; }
+.title-card, .over-card, .help-card { background: linear-gradient(160deg, #fdf6e3, #efe3c2); color: #241f1a; border: 4px solid #e9c46a; border-radius: 16px; padding: 28px 36px; text-align: center; max-width: 640px; box-shadow: 0 12px 40px rgba(0, 0, 0, .6); }
+.title-sigil-row { font-size: 30px; letter-spacing: 12px; }
+.title-sigil-row::first-letter { color: #e8590c; }
+.title-heading { font-family: Georgia, serif; font-size: 52px; margin: 8px 0 4px; letter-spacing: 6px; color: #70460f; }
+.title-sub { font-size: 18px; font-style: italic; color: #4a4238; }
+.title-rules { font-size: 14px; color: #4a4238; line-height: 1.5; }
+.title-keys { font-size: 12px; color: #70460f; margin-top: 16px; }
+.big-btn { background: linear-gradient(180deg, #fab005, #e67700); color: #241f1a; border: 2px solid #70460f; border-radius: 10px; padding: 12px 30px; font-size: 19px; font-weight: 800; letter-spacing: 2px; cursor: pointer; margin-top: 10px; }
+.big-btn:hover { filter: brightness(1.08); }
+.over-heading { font-family: Georgia, serif; font-size: 56px; margin: 4px 0; letter-spacing: 4px; color: #c92a2a; }
+.over-heading.won { color: #2b8a3e; }
+.over-sub { font-size: 17px; color: #4a4238; }
+.help-card { text-align: left; max-width: 560px; }
+.help-card h2 { font-family: Georgia, serif; text-align: center; }
+.keyword-list { padding-left: 20px; line-height: 1.6; }
+.help-card .big-btn { display: block; margin: 14px auto 0; }
+
+/* Shots: freeze every animation so a screenshot is a still frame. */
+.shot * { transition: none !important; animation: none !important; }
